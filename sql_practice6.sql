@@ -57,7 +57,28 @@ ON A.user_id=B.user_id
 WHERE EXTRACT(MONTH FROM A.event_date) = 07
 AND A.event_type IN ('sign-in', 'like', 'comment')
 GROUP BY EXTRACT(MONTH FROM A.event_date)
-
+-- EX 6
+SELECT TO_CHAR(trans_date::DATE, 'YYYY-MM') as month,
+       country,
+       COUNT(id) AS trans_count,
+       COUNT(ID) FILTER(WHERE state = 'approved') AS approved_count,
+       SUM(amount) AS trans_total_amount,
+       SUM(amount) FILTER(WHERE state = 'approved') AS approved_total_amount
+from Transactions
+GROUP BY TO_CHAR(trans_date::DATE, 'YYYY-MM'), country
+-- Ex 7
+SELECT product_id, min(year) AS first_year, quantity,  price
+FROM Sales
+GROUP BY product_id
+-- EX 8
+WITH CTE AS (SELECT customer_id, COUNT(product_key) AS total_product
+FROM Customer
+GROUP BY customer_id
+ORDER BY customer_id
+)
+SELECT customer_id
+FROM CTE 
+WHERE total_product = 2
 -- EX 9
 SELECT employee_id
 FROM Employees
