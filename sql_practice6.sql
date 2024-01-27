@@ -85,6 +85,18 @@ FROM Employees
 WHERE manager_id NOT IN (
     SELECT employee_id FROM Employees
 )
+-- EX 10
+WITH cte as (
+SELECT company_id, 
+       title, 
+       description, 
+       count(job_id) as total_jobs
+From job_listings
+Group by company_id, title, description
+)
+SELECT count(total_jobs) as duplicate_companies
+FROM cte
+where total_jobs >1
 -- EX 11
 
 (SELECT A.NAME AS results
@@ -105,6 +117,21 @@ GROUP BY C.title
 ORDER BY AVG(D.RATING) DESC,1
 LIMIT 1
 )
+-- EX 12
+WITH
+    CTE AS (
+        SELECT requester_id, accepter_id FROM RequestAccepted
+        UNION
+        SELECT accepter_id, requester_id FROM RequestAccepted
+    )
+SELECT requester_id AS id, COUNT(accepter_id) AS num
+FROM CTE
+GROUP BY requester_id
+ORDER BY COUNT(accepter_id) DESC
+LIMIT 1
+
+
+
 
 
 
